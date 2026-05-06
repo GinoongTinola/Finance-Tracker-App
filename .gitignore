@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Node (if ever used for tooling)
+node_modules/
+
+# Personal backup files — keep private
+backups/*.json

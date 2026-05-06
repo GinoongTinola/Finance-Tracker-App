@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAAOAQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAANVJREFUeJxjZGBgYODjF/zPQAb49PE9I+OdVTb///5j+PnvH8MvJPrXv38MP//+Y/j17z+KOIY8Ezk2IwNGQs6/tdLqo1r4MX5c8nhdcGul1UdsNEEXQBUegXJt1MKP8SNrRnYRhguQFNqohR/zZmBg4EfWhO4dDAOQFd5aaQUzlIGBgYFh/+X1N9DVYw2DNNHKR+hiM2tenkSmcRrgsG/zZWSaEKA4HVBsAAMfv+B/dOx39sglGPvFDm+4+PLuXyfQ1RJMiTT3AtOnj+8ZydX86eN7RgBUdYYVcQidSAAAAABJRU5ErkJggg==">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0e0f11">
+    <title>Financial Roadmap</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+        :root {
+            --bg:        #0e0f11;
+            --bg2:       #13151a;
+            --bg3:       #1a1d24;
+            --surface:   rgba(255,255,255,0.04);
+            --surface2:  rgba(255,255,255,0.07);
+            --border:    rgba(255,255,255,0.08);
+            --border2:   rgba(255,255,255,0.14);
+            --text:      #f0f2f5;
+            --muted:     rgba(240,242,245,0.4);
+            --muted2:    rgba(240,242,245,0.65);
+            --gold:      #e8b84b;
+            --gold-dim:  rgba(232,184,75,0.12);
+            --gold-glow: rgba(232,184,75,0.25);
+            --teal:      #4ecdc4;
+            --teal-dim:  rgba(78,205,196,0.1);
+            --rose:      #f06b6b;
+            --rose-dim:  rgba(240,107,107,0.1);
+            --violet:    #a78bfa;
+            --violet-dim:rgba(167,139,250,0.1);
+            --green:     #5fd987;
+            --green-dim: rgba(95,217,135,0.1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse 55% 40% at 5% 10%, rgba(232,184,75,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 35% at 95% 85%, rgba(78,205,196,0.04) 0%, transparent 70%);
+        }
+
+        .container { max-width: 1720px; margin: 0 auto; padding: 0 28px 48px; position: relative; z-index: 1; }
+
+        /* TOPBAR */
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 28px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(14,15,17,0.9);
+            backdrop-filter: blur(20px);
+            margin-left: -28px; margin-right: -28px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-icon {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, #c49a28 0%, #e8b84b 50%, #f5d78e 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px; box-shadow: 0 0 20px rgba(232,184,75,0.28);
+            flex-shrink: 0;
+        }
+        .brand-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1em; letter-spacing: -0.3px; color: var(--text); }
+        .brand-text span { color: var(--gold); }
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .backup-nudge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(240,107,107,0.4);
+            background: rgba(240,107,107,0.08); color: var(--rose);
+            font-size: 0.74em; font-weight: 600; font-family: 'Instrument Sans', sans-serif;
+            cursor: pointer; transition: all 0.15s; animation: nudgePulse 2.5s ease-in-out infinite;
+        }
+        .backup-nudge:hover { background: rgba(240,107,107,0.18); border-color: var(--rose); }
+        @keyframes nudgePulse { 0%,100% { opacity:1; } 50% { opacity:0.65; } }
+        .last-saved-badge {
+            font-size: 0.72em; color: var(--muted); padding: 4px 10px;
+            background: var(--surface); border-radius: 6px; border: 1px solid var(--border);
+            font-family: 'IBM Plex Mono', monospace; white-space: nowrap;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 8px 18px; border-radius: 7px;
+            font-family: 'Instrument Sans', sans-serif; font-weight: 600; font-size: 0.82em;
+            cursor: pointer; transition: all 0.18s; border: none; letter-spacing: 0.1px;
+        }
+        .btn-save { background: var(--gold); color: #0e0f11; box-shadow: 0 0 14px rgba(232,184,75,0.18); }
+        .btn-save:hover { background: #f0c85c; box-shadow: 0 0 22px rgba(232,184,75,0.35); transform: translateY(-1px); }
+        .btn-clear { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(240,107,107,0.2); }
+        .btn-clear:hover { background: rgba(240,107,107,0.18); transform: translateY(-1px); }
+        .file-input { display: none; }
+
+        /* YEAR NAV */
+        .year-nav { display: flex; gap: 6px; margin-bottom: 26px; flex-wrap: wrap; align-items: center; }
+        .year-btn {
+            padding: 5px 20px; border-radius: 5px; font-weight: 700; font-size: 0.85em;
+            cursor: pointer; transition: all 0.18s; position: relative;
+            background: var(--surface); color: var(--muted2);
+            border: 1px solid var(--border); font-family: 'Syne', sans-serif;
+        }
+        .year-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+        .year-btn.active { background: var(--gold-dim); color: var(--gold); border-color: rgba(232,184,75,0.35); box-shadow: 0 0 14px rgba(232,184,75,0.1); }
+        .del-year {
+            position: absolute; top: -7px; right: -7px;
+            width: 15px; height: 15px; border-radius: 50%;
+            background: var(--rose); color: white; font-size: 9px;
+            display: none; align-items: center; justify-content: center;
+            cursor: pointer; border: 2px solid var(--bg);
+        }
+        .year-btn:hover .del-year { display: flex; }
+        .add-year-btn {
+            padding: 5px 16px; border-radius: 5px; font-weight: 700; font-size: 0.85em;
+            cursor: pointer; background: transparent; color: var(--muted);
+            border: 1px dashed var(--border); transition: all 0.18s; font-family: 'Syne', sans-serif;
+        }
+        .add-year-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* YEAR CONTAINER */
+        .year-container { display: none; }
+        .year-container.active { display: block; animation: fadeUp 0.28s ease both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* SECTION TABS */
+        .section-tabs { display: flex; margin-bottom: 28px; border-bottom: 1px solid var(--border); }
+        .tab-btn {
+            padding: 9px 22px; font-family: 'Instrument Sans', sans-serif;
+            font-weight: 600; font-size: 0.84em; cursor: pointer;
+            border: none; background: transparent; color: var(--muted2);
+            transition: all 0.18s; position: relative;
+            border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeUp 0.2s ease both; }
+        .tab-settings-btn { margin-left: auto; color: var(--muted); font-size: 0.82em; }
+
+        /* ── OVERVIEW LAYOUT ── */
+        .overview-wrap { display: flex; flex-direction: column; gap: 20px; margin-bottom: 4px; }
+
+        /* Hero row: Income + Expenses + Unallocated */
+        .hero-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px; }
+        .hero-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px 26px;
+            position: relative; overflow: hidden; transition: border-color 0.2s;
+        }
+        .hero-card:hover { border-color: var(--border2); }
+        .hero-card.hc-income  { border-color: rgba(78,205,196,0.2); background: linear-gradient(135deg, rgba(78,205,196,0.06) 0%, var(--bg2) 60%); }
+        .hero-card.hc-expense { border-color: rgba(240,107,107,0.18); background: linear-gradient(135deg, rgba(240,107,107,0.05) 0%, var(--bg2) 60%); }
+        .hero-card.hc-unalloc { border-color: rgba(167,139,250,0.18); background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, var(--bg2) 60%); }
+        .hero-card-icon {
+            position: absolute; top: 20px; right: 22px;
+            font-size: 1.6em; opacity: 0.15;
+        }
+        .hero-label {
+            font-size: 0.67em; text-transform: uppercase; letter-spacing: 1.4px;
+            color: var(--muted); font-weight: 600; font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 14px;
+        }
+        .hero-value {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 2.6em; letter-spacing: -1px; line-height: 1; margin-bottom: 8px;
+        }
+        .hero-value.hv-teal   { color: var(--teal); }
+        .hero-value.hv-rose   { color: var(--rose); }
+        .hero-value.hv-violet { color: var(--violet); }
+        .hero-sub {
+            font-size: 0.74em; color: var(--muted);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .hero-sub .tag {
+            padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.9em;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .tag-surplus  { background: rgba(95,217,135,0.15); color: var(--green); }
+        .tag-deficit  { background: rgba(240,107,107,0.15); color: var(--rose); }
+        .tag-exact    { background: rgba(232,184,75,0.15);  color: var(--gold); }
+        .tag-neutral  { background: var(--surface); color: var(--muted); }
+
+        /* Flow bar: visual income vs spend ratio */
+        .flow-bar-wrap { margin-top: 16px; }
+        .flow-bar-track {
+            height: 5px; background: rgba(255,255,255,0.07);
+            border-radius: 3px; overflow: hidden; position: relative;
+        }
+        .flow-bar-fill {
+            height: 100%; border-radius: 3px;
+            transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+        }
+        .flow-bar-fill.fb-teal   { background: var(--teal); box-shadow: 0 0 6px rgba(78,205,196,0.4); }
+        .flow-bar-fill.fb-rose   { background: var(--rose); }
+        .flow-bar-fill.fb-green  { background: var(--green); box-shadow: 0 0 6px rgba(95,217,135,0.4); }
+        .flow-bar-label { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.68em; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+        /* Goals row */
+        .goals-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .goal-card {
+            background: var(--bg2); border: 1px solid rgba(232,184,75,0.16);
+            border-radius: 12px; padding: 20px 22px;
+            position: relative; overflow: hidden; transition: border-color 0.2s;
+        }
+        .goal-card:hover { border-color: rgba(232,184,75,0.3); }
+        .goal-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--gold), transparent 70%);
+        }
+        .goal-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+        .goal-card-label { font-size: 0.67em; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+        .goal-card-pct-badge {
+            font-size: 0.7em; font-family: 'IBM Plex Mono', monospace; font-weight: 600;
+            padding: 2px 7px; border-radius: 4px;
+            background: var(--gold-dim); color: var(--gold);
+        }
+        .goal-card-value {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 1.9em; color: var(--gold); letter-spacing: -0.5px;
+            line-height: 1; margin-bottom: 14px;
+        }
+        .goal-track {
+            height: 6px; background: rgba(255,255,255,0.07);
+            border-radius: 3px; overflow: hidden; margin-bottom: 10px;
+        }
+        .goal-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, #c49a28, #e8b84b, #f5d78e);
+            box-shadow: 0 0 8px rgba(232,184,75,0.35);
+            transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+        }
+        .goal-input-row { display: flex; gap: 6px; }
+        .goal-input-row input {
+            flex: 1; padding: 6px 9px; border-radius: 6px; font-size: 0.76em;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); font-family: 'IBM Plex Mono', monospace;
+            transition: border-color 0.15s;
+        }
+        .goal-input-row input::placeholder { color: var(--muted); }
+        .goal-input-row input:focus { outline: none; border-color: var(--gold); background: var(--gold-dim); }
+        .goal-input-row button {
+            padding: 6px 12px; border-radius: 6px; border: none; font-size: 0.74em;
+            font-weight: 700; cursor: pointer; background: var(--gold); color: #0e0f11;
+            font-family: 'Instrument Sans', sans-serif; transition: all 0.15s;
+        }
+        .goal-input-row button:hover { background: #f0c85c; }
+        .goal-pct-text { font-size: 0.68em; color: var(--muted); font-family: 'IBM Plex Mono', monospace; margin-top: 6px; }
+
+        /* Expense breakdown mini row */
+        .breakdown-row {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px 24px;
+        }
+        .breakdown-title { font-size: 0.67em; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); font-weight: 600; font-family: 'IBM Plex Mono', monospace; margin-bottom: 16px; }
+        .breakdown-bars { display: flex; flex-direction: column; gap: 9px; }
+        .bk-row { display: grid; grid-template-columns: 130px 1fr 70px; align-items: center; gap: 12px; }
+        .bk-label { font-size: 0.75em; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bk-track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+        .bk-fill  { height: 100%; border-radius: 3px; background: var(--rose); opacity: 0.7; transition: width 0.6s ease; }
+        .bk-fill.bk-income { background: var(--teal); opacity: 0.8; }
+        .bk-fill.bk-goal   { background: var(--gold); opacity: 0.75; }
+        .bk-amount { font-size: 0.72em; font-family: 'IBM Plex Mono', monospace; color: var(--muted2); text-align: right; }
+
+        /* keep old progress classes for compat */
+        .progress-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
+        .progress-fill { height: 100%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+        .progress-fill.pf-gold  { background: var(--gold); }
+        .progress-fill.pf-teal  { background: var(--teal); }
+        .progress-fill.pf-green { background: var(--green); }
+        .progress-pct { font-size: 0.7em; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+        /* keep old card classes */
+        .summary-grid { display: none; }
+        .card-label { font-size: 0.67em; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+        .card-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.75em; margin-bottom: 4px; letter-spacing: -0.5px; line-height: 1; }
+        .card-value.c-teal   { color: var(--teal); }
+        .card-value.c-rose   { color: var(--rose); }
+        .card-value.c-violet { color: var(--violet); }
+        .card-value.c-gold   { color: var(--gold); }
+        .card-value.c-green  { color: var(--green); }
+        .card-sub { font-size: 0.73em; color: var(--muted); }
+        .goal-row { display: flex; gap: 6px; margin: 10px 0 8px; }
+        .goal-row input { flex: 1; padding: 6px 9px; border-radius: 6px; font-size: 0.78em; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+        .goal-row input:focus { outline: none; border-color: var(--gold); }
+        .goal-row button { padding: 6px 12px; border-radius: 6px; border: none; font-size: 0.76em; font-weight: 700; cursor: pointer; background: var(--gold); color: #0e0f11; font-family: 'Instrument Sans', sans-serif; }
+
+        @media (max-width: 1100px) { .hero-row { grid-template-columns: 1fr 1fr; } .goals-row { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 720px)  { .hero-row { grid-template-columns: 1fr; } .goals-row { grid-template-columns: 1fr; } .bk-row { grid-template-columns: 100px 1fr 60px; } }
+
+        /* CATEGORY MANAGER */
+        .category-manager { padding: 2px 0; }
+        .category-manager h3 {
+            font-size: 0.68em; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--muted); margin-bottom: 12px; font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+        }
+        .cat-legend { display: flex; gap: 18px; margin-bottom: 12px; font-size: 0.73em; color: var(--muted2); flex-wrap: wrap; }
+        .category-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .cat-tag {
+            display: flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: 5px;
+            font-size: 0.76em; font-weight: 600; border: 1px solid;
+            font-family: 'Instrument Sans', sans-serif;
+        }
+        .cat-tag.t-expense { background: var(--rose-dim); border-color: rgba(240,107,107,0.2); color: var(--rose); }
+        .cat-tag.t-income  { background: var(--teal-dim); border-color: rgba(78,205,196,0.2);  color: var(--teal); }
+        .cat-tag.t-goal    { background: var(--gold-dim); border-color: rgba(232,184,75,0.2);  color: var(--gold); }
+        .cat-tag-del { cursor: pointer; opacity: 0.5; line-height: 1; transition: opacity 0.15s; }
+        .cat-tag-del:hover { opacity: 1; }
+        .cat-add-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+        .cat-add-row input {
+            padding: 7px 11px; border-radius: 6px; font-size: 0.8em;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); font-family: 'Instrument Sans', sans-serif; width: 190px;
+            transition: border-color 0.15s;
+        }
+        .cat-add-row input:focus { outline: none; border-color: var(--gold); }
+        .cat-type-toggle { display: flex; gap: 4px; }
+        .type-btn {
+            padding: 6px 11px; border-radius: 5px; font-size: 0.76em; font-weight: 600;
+            cursor: pointer; transition: all 0.15s; font-family: 'Instrument Sans', sans-serif;
+            background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+        }
+        .type-btn.active-expense { background: var(--rose-dim); color: var(--rose); border-color: rgba(240,107,107,0.28); }
+        .type-btn.active-income  { background: var(--teal-dim); color: var(--teal); border-color: rgba(78,205,196,0.28); }
+        .type-btn.active-goal    { background: var(--gold-dim); color: var(--gold); border-color: rgba(232,184,75,0.28); }
+        .cat-add-btn {
+            padding: 7px 14px; border-radius: 6px; border: none; font-size: 0.8em;
+            font-weight: 700; cursor: pointer; background: var(--gold); color: #0e0f11;
+            font-family: 'Instrument Sans', sans-serif; transition: all 0.15s;
+        }
+        .cat-add-btn:hover { background: #f0c85c; }
+
+        /* TABLE */
+        .table-wrapper { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 22px; overflow-x: auto; }
+        .table-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .table-top h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1em; color: var(--text); }
+        .table-legend { display: flex; gap: 12px; font-size: 0.73em; color: var(--muted); }
+        .legend-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            padding: 9px 8px 11px; font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.64em; text-transform: uppercase; letter-spacing: 0.8px;
+            color: var(--muted); font-weight: 500; text-align: center;
+            border-bottom: 1px solid var(--border); white-space: nowrap;
+        }
+        thead th:first-child { text-align: left; padding-left: 10px; }
+        thead th.income-header { color: var(--teal); }
+        thead th.goal-header   { color: var(--gold); }
+        thead th.net-header    { color: var(--violet); }
+
+        tbody tr { border-bottom: 1px solid rgba(255,255,255,0.035); transition: background 0.1s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface); }
+        tbody tr td { padding: 6px 5px; vertical-align: middle; text-align: center; }
+        tbody tr td:first-child { text-align: left; padding-left: 10px; }
+        tbody tr.current-month { background: rgba(232,184,75,0.04); }
+        tbody tr.current-month td:first-child { border-left: 2px solid var(--gold); padding-left: 8px; }
+
+        .month-label { font-weight: 600; font-size: 0.83em; white-space: nowrap; }
+        .month-label small { display: block; color: var(--muted); font-size: 0.78em; font-weight: 400; font-family: 'IBM Plex Mono', monospace; }
+
+        .cell-inner { display: flex; align-items: center; gap: 4px; justify-content: center; }
+        .cell-inner input[type="number"] {
+            width: 78px; padding: 5px 6px; border-radius: 5px;
+            font-size: 0.78em; font-family: 'IBM Plex Mono', monospace;
+            background: var(--surface); border: 1px solid rgba(255,255,255,0.07);
+            color: var(--text); text-align: right; transition: all 0.12s;
+            -moz-appearance: textfield;
+        }
+        .cell-inner input[type="number"]::-webkit-inner-spin-button,
+        .cell-inner input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .cell-inner input[type="number"]:focus { outline: none; border-color: var(--gold); background: var(--gold-dim); }
+        .cell-inner input[type="number"].income-input:focus { border-color: var(--teal); background: var(--teal-dim); }
+        .cell-inner input[type="number"].goal-input:focus   { border-color: var(--gold); background: var(--gold-dim); }
+        .cell-inner input[type="checkbox"] { width: 13px; height: 13px; cursor: pointer; accent-color: var(--green); flex-shrink: 0; }
+        .cell-inner.goal-cell input[type="checkbox"] { accent-color: var(--gold); }
+        .cell-inner.done { opacity: 0.38; }
+        .cell-inner.done input[type="number"] { background: rgba(95,217,135,0.05); border-color: rgba(95,217,135,0.12); }
+        .cell-inner.done.goal-done input[type="number"] { background: rgba(232,184,75,0.05); border-color: rgba(232,184,75,0.15); }
+
+        .net-cell { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8em; padding: 0 8px; min-width: 84px; white-space: nowrap; }
+        .net-cell.positive { color: var(--green); }
+        .net-cell.negative { color: var(--rose); }
+        .net-cell.zero     { color: var(--muted); }
+
+        /* CHARTS */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .chart-card h3 { font-family: 'IBM Plex Mono', monospace; font-size: 0.67em; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; font-weight: 500; }
+        .chart-card.wide { grid-column: 1 / -1; }
+        .chart-container { position: relative; height: 260px; }
+
+        /* PROJECTION CHART */
+        .proj-chart-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+        .proj-chart-sub { font-size: 0.71em; color: var(--muted); margin-top: 5px; line-height: 1.5; max-width: 560px; }
+        .proj-toggle-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+        .proj-toggle-label { font-size: 0.68em; color: var(--muted); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.8px; }
+        .proj-months-select {
+            padding: 5px 10px; border-radius: 6px; font-size: 0.76em;
+            background: var(--surface); border: 1px solid var(--border2);
+            color: var(--text); font-family: 'IBM Plex Mono', monospace;
+            cursor: pointer; transition: border-color 0.15s;
+        }
+        .proj-months-select:focus { outline: none; border-color: var(--gold); }
+        .proj-chart-container { height: 300px; }
+        .proj-summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+        .proj-stat {
+            padding: 14px 16px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; display: flex; flex-direction: column; gap: 4px;
+        }
+        .proj-stat-label { font-size: 0.63em; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+        .proj-stat-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.25em; margin: 2px 0; }
+        .proj-stat-sub { font-size: 0.68em; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+        .proj-combined-bar {
+            grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            padding: 10px 16px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.76em; font-family: 'IBM Plex Mono', monospace;
+        }
+        .proj-combined-item { color: var(--muted2); }
+        .proj-combined-item strong { color: var(--text); }
+        .proj-combined-sep { color: var(--border2); }
+
+        /* INLINE PROJECTION (in Table tab) */
+        .proj-inline-wrap { margin-top: 16px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+        .proj-inline-toggle {
+            width: 100%; display: flex; align-items: center; gap: 10px;
+            padding: 13px 18px; background: var(--bg2); border: none; cursor: pointer;
+            font-family: 'Instrument Sans', sans-serif; font-size: 0.86em; font-weight: 600;
+            color: var(--text); text-align: left; transition: background 0.15s;
+        }
+        .proj-inline-toggle:hover { background: var(--bg3); }
+        .proj-inline-toggle span:first-child { font-size: 0.7em; color: var(--muted); transition: transform 0.2s; }
+        .proj-inline-toggle.open span:first-child { transform: rotate(90deg); }
+        .proj-inline-badge {
+            margin-left: auto; font-size: 0.72em; font-family: 'IBM Plex Mono', monospace;
+            padding: 2px 8px; border-radius: 4px;
+            background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(232,184,75,0.2);
+        }
+        .proj-inline-body { padding: 18px 18px 20px; background: var(--bg2); border-top: 1px solid var(--border); }
+
+        /* DEPOSIT LOG — 3 sections */
+        .deposit-log-section-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+        .deposit-sync-btn {
+            flex-shrink: 0; padding: 5px 12px; border-radius: 6px;
+            border: 1px solid rgba(78,205,196,0.3); background: var(--teal-dim);
+            color: var(--teal); font-size: 0.74em; font-weight: 600;
+            font-family: 'Instrument Sans', sans-serif; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+        }
+        .deposit-sync-btn:hover { border-color: var(--teal); background: rgba(78,205,196,0.18); }
+        .deposit-log-wrap { margin-top: 0; border-top: 1px solid var(--border); padding-top: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .deposit-log-section { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+        .deposit-log-section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; background: var(--bg3);
+        }
+        .deposit-log-section-title {
+            font-family: 'IBM Plex Mono', monospace; font-size: 0.67em;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+        }
+        .deposit-add-btn {
+            padding: 5px 12px; border-radius: 5px; border: 1px dashed var(--border2);
+            background: transparent; font-size: 0.74em; font-weight: 600;
+            font-family: 'Instrument Sans', sans-serif; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+        }
+        .deposit-add-btn:hover { border-style: solid; }
+        .deposit-section-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; background: var(--bg2); }
+        .deposit-entry {
+            display: grid; grid-template-columns: 1fr 100px 28px; gap: 7px; align-items: center;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px;
+            transition: border-color 0.15s;
+        }
+        .deposit-entry:hover { border-color: var(--border2); }
+        .deposit-entry input[type="date"],
+        .deposit-entry input[type="number"] {
+            width: 100%; padding: 5px 8px; border-radius: 5px; font-size: 0.77em;
+            background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+            font-family: 'IBM Plex Mono', monospace; transition: border-color 0.15s;
+        }
+        .deposit-entry input:focus { outline: none; border-color: var(--gold); background: var(--gold-dim); }
+        .deposit-entry-synced { opacity: 0.7; border-style: dashed; }
+        .deposit-entry-synced input { color: var(--muted2); cursor: default; }
+        .deposit-del-btn {
+            width: 26px; height: 26px; border-radius: 5px; border: none;
+            background: var(--rose-dim); color: var(--rose); font-size: 0.85em;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+        }
+        .deposit-del-btn:hover { background: rgba(240,107,107,0.25); }
+        .deposit-entry-empty { font-size: 0.74em; color: var(--muted); text-align: center; padding: 10px 0; font-family: 'IBM Plex Mono', monospace; }
+
+        /* SETTINGS */
+        .settings-wrap { display: flex; flex-direction: column; gap: 14px; }
+        .settings-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+        .settings-section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95em; margin-bottom: 4px; }
+        .settings-section-desc  { font-size: 0.76em; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
+        .settings-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+        .settings-btn { padding: 8px 18px; border-radius: 6px; font-weight: 600; font-size: 0.8em; cursor: pointer; font-family: 'Instrument Sans', sans-serif; transition: all 0.18s; border: 1px solid; }
+        .settings-btn.s-export { background: var(--teal-dim);   color: var(--teal);   border-color: rgba(78,205,196,0.22); }
+        .settings-btn.s-import { background: var(--violet-dim); color: var(--violet); border-color: rgba(167,139,250,0.22); }
+        .settings-btn.s-danger { background: var(--rose-dim);   color: var(--rose);   border-color: rgba(240,107,107,0.18); }
+        .settings-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+        /* CONFIRM MODAL */
+        .confirm-modal { width: 360px; max-width: 92vw; }
+        .confirm-modal .confirm-icon { font-size: 2em; margin-bottom: 10px; }
+        .confirm-modal h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1em; margin-bottom: 6px; }
+        .confirm-modal p { font-size: 0.8em; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+        .confirm-modal .modal-btns { gap: 8px; }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; padding: 26px; width: 340px; max-width: 90vw; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+        .modal h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1em; margin-bottom: 16px; }
+        .modal input { width: 100%; padding: 9px 12px; border-radius: 7px; font-size: 0.88em; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; margin-bottom: 14px; }
+        .modal input:focus { outline: none; border-color: var(--gold); }
+        .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 22px; right: 22px; padding: 9px 16px; border-radius: 7px; font-weight: 600; font-size: 0.8em; font-family: 'Instrument Sans', sans-serif; background: var(--bg3); border: 1px solid var(--border2); color: var(--text); z-index: 9999; opacity: 0; transform: translateY(6px); transition: all 0.22s; pointer-events: none; box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error { border-color: rgba(240,107,107,0.4); color: var(--rose); }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+            display: flex; align-items: stretch;
+            background: rgba(14,15,17,0.96);
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .bnav-btn {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 3px; padding: 10px 4px 8px;
+            border: none; background: transparent; cursor: pointer;
+            transition: all 0.18s; color: var(--muted); position: relative;
+        }
+        .bnav-btn::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 2px; border-radius: 0 0 2px 2px;
+            background: var(--gold); transition: width 0.2s ease;
+        }
+        .bnav-btn.active::before { width: 28px; }
+        .bnav-btn.active { color: var(--gold); }
+        .bnav-btn:active { transform: scale(0.92); }
+        .bnav-icon { font-size: 1.3em; line-height: 1; }
+        .bnav-label { font-size: 0.62em; font-weight: 600; font-family: 'Instrument Sans', sans-serif; letter-spacing: 0.3px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1500px) { .summary-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 1100px) {
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .chart-card.wide { grid-column: auto; }
+            .proj-summary-row { grid-template-columns: 1fr 1fr; }
+            .deposit-log-wrap { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            /* Bottom nav visible, top tabs hidden */
+            .bottom-nav { display: flex !important; }
+            .section-tabs { display: none; }
+
+            /* Topbar slim */
+            .topbar { padding: 12px 16px; margin-bottom: 16px; }
+            .brand-text { font-size: 0.95em; }
+            .brand-icon { width: 30px; height: 30px; font-size: 15px; }
+            .last-saved-badge { display: none; }
+            .btn-save { padding: 6px 14px; font-size: 0.78em; }
+            .backup-nudge { font-size: 0.68em; padding: 5px 9px; }
+
+            /* Container padding + bottom nav clearance */
+            .container { padding: 0 12px 88px; }
+
+            /* Year nav */
+            .year-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 2px; margin-bottom: 18px; }
+            .year-btn { padding: 7px 18px; font-size: 0.82em; flex-shrink: 0; }
+            .add-year-btn { flex-shrink: 0; }
+
+            /* Table */
+            .table-wrapper { padding: 14px 10px; border-radius: 8px; }
+            .table-top h2 { font-size: 0.85em; }
+            .table-legend { display: none; }
+            .cell-inner input[type="number"] { width: 58px; font-size: 0.72em; padding: 5px 4px; }
+            .cell-inner input[type="checkbox"] { width: 13px; height: 13px; }
+            .month-label { font-size: 0.75em; min-width: 52px; }
+            .net-cell { font-size: 0.7em; min-width: 60px; padding: 0 4px; }
+            thead th { font-size: 0.56em; padding: 7px 4px 9px; letter-spacing: 0; }
+
+            /* Overview */
+            .hero-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .hero-value { font-size: 1.8em; }
+            .hero-card { padding: 18px 16px; }
+            .goals-row { grid-template-columns: 1fr; gap: 10px; }
+
+            /* Charts */
+            .charts-grid { grid-template-columns: 1fr; gap: 10px; }
+
+            /* Projection */
+            .proj-summary-row { grid-template-columns: 1fr; }
+            .proj-chart-header { flex-direction: column; gap: 10px; }
+            .proj-toggle-wrap { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+            .deposit-log-wrap { grid-template-columns: 1fr; }
+            .deposit-log-section-top { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+            /* Settings — card-style for mobile */
+            .settings-section { border-radius: 12px; padding: 18px 16px; }
+            .settings-section-title { font-size: 1em; }
+            .settings-actions { flex-direction: column; }
+            .settings-btn { width: 100%; text-align: center; padding: 12px 18px; font-size: 0.88em; border-radius: 10px; }
+            .cat-add-row { flex-direction: column; }
+            .cat-add-row input { width: 100%; }
+            .category-tags { gap: 7px; }
+            .cat-tag { padding: 6px 12px; font-size: 0.8em; }
+        }
+        @media (max-width: 480px) {
+            .cell-inner input[type="number"] { width: 46px; font-size: 0.66em; }
+            .hero-row { grid-template-columns: 1fr; }
+            .hero-value { font-size: 2em; }
+            .bk-row { grid-template-columns: 90px 1fr 56px; }
+        }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ADD YEAR MODAL -->
+<div class="modal-overlay" id="addYearModal">
+    <div class="modal">
+        <h3>Add New Year</h3>
+        <input type="number" id="newYearInput" placeholder="e.g. 2028" min="2020" max="2040">
+        <div class="modal-btns">
+            <button class="btn btn-clear" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-save" onclick="confirmAddYear()">Add Year</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+    <div class="modal confirm-modal">
+        <div class="confirm-icon" id="confirmIcon">🗑</div>
+        <h3 id="confirmTitle">Are you sure?</h3>
+        <p id="confirmMessage">This action cannot be undone.</p>
+        <div class="modal-btns">
+            <button class="btn btn-clear" onclick="closeConfirm()">Cancel</button>
+            <button class="btn btn-save" id="confirmOkBtn" style="background:var(--rose);border-color:var(--rose);color:#fff;" onclick="confirmOk()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<div class="topbar">
+    <div class="brand">
+        <div class="brand-icon">💸</div>
+        <div class="brand-text">Financial <span>Roadmap</span></div>
+    </div>
+    <div class="topbar-right">
+        <button id="backupNudge" class="backup-nudge" onclick="exportData()" style="display:none;">⚠ Backup</button>
+        <span class="last-saved-badge" id="lastSaved">auto-save on</span>
+        <button class="btn btn-save" onclick="manualSave()">✓ Save</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- YEAR TABS -->
+    <div class="year-nav" id="yearNav"></div>
+    <!-- YEAR CONTAINERS -->
+    <div id="yearContainers"></div>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottomNav" style="display:none;">
+    <button class="bnav-btn active" data-tab="overview" onclick="bottomNavSwitch('overview',this)">
+        <span class="bnav-icon">📊</span>
+        <span class="bnav-label">Overview</span>
+    </button>
+    <button class="bnav-btn" data-tab="table" onclick="bottomNavSwitch('table',this)">
+        <span class="bnav-icon">📋</span>
+        <span class="bnav-label">Table</span>
+    </button>
+    <button class="bnav-btn" data-tab="charts" onclick="bottomNavSwitch('charts',this)">
+        <span class="bnav-icon">📈</span>
+        <span class="bnav-label">Charts</span>
+    </button>
+    <button class="bnav-btn" data-tab="settings" onclick="bottomNavSwitch('settings',this)">
+        <span class="bnav-icon">⚙️</span>
+        <span class="bnav-label">Settings</span>
+    </button>
+</nav>
+
+<script>
+// ══════════════════════════════════════════
+// DATA MODEL
+// ══════════════════════════════════════════
+const months = [
+    { name: 'January',   short: 'Jan', dates: ['1–15', '16–31'], num: 0 },
+    { name: 'February',  short: 'Feb', dates: ['1–15', '16–28'], num: 1 },
+    { name: 'March',     short: 'Mar', dates: ['1–15', '16–31'], num: 2 },
+    { name: 'April',     short: 'Apr', dates: ['1–15', '16–30'], num: 3 },
+    { name: 'May',       short: 'May', dates: ['1–15', '16–31'], num: 4 },
+    { name: 'June',      short: 'Jun', dates: ['1–15', '16–30'], num: 5 },
+    { name: 'July',      short: 'Jul', dates: ['1–15', '16–31'], num: 6 },
+    { name: 'August',    short: 'Aug', dates: ['1–15', '16–31'], num: 7 },
+    { name: 'September', short: 'Sep', dates: ['1–15', '16–30'], num: 8 },
+    { name: 'October',   short: 'Oct', dates: ['1–15', '16–31'], num: 9 },
+    { name: 'November',  short: 'Nov', dates: ['1–15', '16–30'], num: 10 },
+    { name: 'December',  short: 'Dec', dates: ['1–15', '16–31'], num: 11 },
+];
+
+const DEFAULT_CATEGORIES = [
+    // Income first — source of everything
+    { id: 'income',       label: 'Income',           type: 'income'  },
+    // Expenses — these count toward spending totals
+    { id: 'transpo_cash', label: 'Transpo (Cash)',   type: 'expense' },
+    { id: 'transpo_card', label: 'Transpo (MARI)',   type: 'expense' },
+    { id: 'bills',        label: 'Bills @ Home',     type: 'expense' },
+    { id: 'food',         label: 'Food @ Office',    type: 'expense' },
+    { id: 'debt',         label: 'Debt / Balances',  type: 'expense' },
+    { id: 'leisure',      label: 'Leisures',         type: 'expense' },
+    // Goals — tracked separately, not counted as expenses
+    { id: 'savings',      label: 'Savings (Maya)',   type: 'goal', goal: true },
+    { id: 'ef',           label: 'Emergency Fund',   type: 'goal', goal: true },
+    { id: 'invest',       label: 'Future Trips',     type: 'goal', goal: true },
+];
+
+let budgetData = {
+    years: [2025, 2026, 2027],
+    categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+    data: {
+        2025: { entries: {}, completed: {}, goals: { savings: 0, ef: 0, invest: 0 } },
+        2026: { entries: {}, completed: {}, goals: { savings: 0, ef: 0, invest: 0 } },
+        2027: { entries: {}, completed: {}, goals: { savings: 0, ef: 0, invest: 0 } },
+    }
+};
+
+let currentYear = new Date().getFullYear();
+if (!budgetData.years.includes(currentYear)) currentYear = budgetData.years[0];
+
+let autoSaveTimeout = null;
+let charts = {};
+let isLoading = false; // suppress autoSave during initial load
+
+// ══════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════
+function saveToLocalStorage() {
+    try {
+        localStorage.setItem('frm_v2', JSON.stringify(budgetData));
+        localStorage.setItem('frm_year', currentYear);
+        localStorage.setItem('frm_saved', new Date().toISOString());
+        updateLastSaved();
+        checkStorageUsage();
+    } catch(e) { showToast('❌ Storage full — export a backup now!', true); }
+}
+function migrateCategories() {
+    // Fix: savings/ef/invest should be 'goal' type, not 'expense'
+    const goalIds = ['savings', 'ef', 'invest'];
+    if (budgetData.categories) {
+        budgetData.categories.forEach(c => {
+            if (goalIds.includes(c.id) && c.type !== 'goal') {
+                c.type = 'goal';
+                c.goal = true;
+            }
+        });
+        // Ensure income is first column
+        const incomeIdx = budgetData.categories.findIndex(c => c.id === 'income');
+        if (incomeIdx > 0) {
+            const [inc] = budgetData.categories.splice(incomeIdx, 1);
+            budgetData.categories.unshift(inc);
+        }
+    }
+}
+
+function loadFromLocalStorage() {
+    try {
+        const raw = localStorage.getItem('frm_v2');
+        if (raw) {
+            budgetData = JSON.parse(raw);
+            migrateCategories();
+            return true;
+        }
+        // backward compat with old key
+        const old = localStorage.getItem('financialRoadmapData');
+        if (old) {
+            const parsed = JSON.parse(old);
+            budgetData.years = parsed.years || budgetData.years;
+            budgetData.data = parsed.data || budgetData.data;
+            if (!budgetData.categories) budgetData.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+            migrateCategories();
+        }
+        return false;
+    } catch(e) { return false; }
+}
+function updateLastSaved() {
+    const ts = localStorage.getItem('frm_saved');
+    const el = document.getElementById('lastSaved');
+    if (!ts) return;
+    el.textContent = 'saved ' + new Date(ts).toLocaleTimeString();
+
+    // Show backup nudge if last export was >7 days ago (or never)
+    const lastExport = localStorage.getItem('frm_last_export');
+    const daysSinceExport = lastExport
+        ? (Date.now() - new Date(lastExport).getTime()) / (1000 * 60 * 60 * 24)
+        : 999;
+    const nudgeEl = document.getElementById('backupNudge');
+    if (nudgeEl) nudgeEl.style.display = daysSinceExport > 7 ? 'inline-flex' : 'none';
+}
+function clampInput(inp) {
+    const val = parseFloat(inp.value);
+    if (isNaN(val) || val < 0) { inp.value = ''; return; }
+    // Cap at reasonable max (₱10M per entry)
+    if (val > 10_000_000) { inp.value = 10_000_000; showToast('⚠ Value capped at ₱10,000,000', true); }
+}
+
+function checkStorageUsage() {
+    try {
+        const used = new Blob([localStorage.getItem('frm_v2') || '']).size;
+        const pct  = (used / (5 * 1024 * 1024)) * 100; // 5MB typical limit
+        if (pct > 80) showToast(`⚠ Storage ${pct.toFixed(0)}% full — export a backup!`, true);
+    } catch {}
+}
+
+function autoSave() {
+    if (isLoading) return;
+    clearTimeout(autoSaveTimeout);
+    autoSaveTimeout = setTimeout(() => { collectAllData(); saveToLocalStorage(); }, 600);
+}
+function manualSave() { collectAllData(); saveToLocalStorage(); showToast('✅ Saved!'); }
+
+// ══════════════════════════════════════════
+// COLLECT DATA FROM DOM
+// ══════════════════════════════════════════
+function collectAllData() {
+    budgetData.years.forEach(year => {
+        const entries = {}, completed = {};
+        document.querySelectorAll(`input[data-year="${year}"]`).forEach(inp => {
+            const key = inp.dataset.row + '-' + inp.dataset.cat;
+            if (inp.type === 'checkbox') { if (inp.checked) completed[key] = true; }
+            else if (inp.type === 'number' && inp.value) {
+                const v = parseFloat(inp.value);
+                if (!isNaN(v) && v !== 0) entries[key] = v;
+            }
+        });
+        budgetData.data[year].entries = entries;
+        budgetData.data[year].completed = completed;
+    });
+}
+
+// ══════════════════════════════════════════
+// CATEGORIES
+// ══════════════════════════════════════════
+function getCats()     { return budgetData.categories; }
+function getExpenseCats() { return getCats().filter(c => c.type === 'expense'); }
+function getIncomeCats()  { return getCats().filter(c => c.type === 'income'); }
+function getGoalCats()    { return getCats().filter(c => c.type === 'goal'); }
+
+function renderCategoryManager(year) {
+    const el = document.getElementById(`catManager${year}`);
+    if (!el) return;
+    const cats = getCats();
+    const iconMap  = { income: '↑', expense: '↓', goal: '★' };
+    const colorMap = { income: 'var(--income-color)', expense: 'var(--expense-color)', goal: '#fbbf24' };
+    el.innerHTML = `
+        <h3>⚙ Categories</h3>
+        <div style="font-size:0.78em;color:var(--text-muted);margin-bottom:12px;">
+            <span style="color:var(--expense-color)">↓ Expense</span> — counts toward spending &nbsp;|&nbsp;
+            <span style="color:var(--income-color)">↑ Income</span> — counts toward income &nbsp;|&nbsp;
+            <span style="color:#fbbf24">★ Goal</span> — savings targets, tracked separately
+        </div>
+        <div class="category-tags">
+            ${cats.map(c => `
+                <div class="cat-tag ${c.type === 'income' ? 'income-tag' : c.type === 'goal' ? 'goal-tag' : ''}">
+                    <span style="color:${colorMap[c.type]||'var(--expense-color)'}">${iconMap[c.type]||'↓'}</span>
+                    ${c.label}
+                    <span class="cat-tag-del" onclick="deleteCategory('${c.id}', ${year})">×</span>
+                </div>
+            `).join('')}
+        </div>
+        <div class="cat-add-row">
+            <input type="text" id="newCatName${year}" placeholder="New category name..." maxlength="24"
+                onkeydown="if(event.key==='Enter') addCategory(${year})">
+            <div class="cat-type-toggle">
+                <button class="type-btn active-expense" id="typeExpBtn${year}"  onclick="setCatType('expense',${year})">↓ Expense</button>
+                <button class="type-btn"                id="typeIncBtn${year}"  onclick="setCatType('income',${year})">↑ Income</button>
+                <button class="type-btn"                id="typeGoalBtn${year}" onclick="setCatType('goal',${year})">★ Goal</button>
+            </div>
+            <button class="cat-add-btn" onclick="addCategory(${year})">+ Add</button>
+        </div>
+    `;
+}
+
+let newCatType = 'expense';
+function setCatType(type, year) {
+    newCatType = type;
+    document.getElementById(`typeExpBtn${year}`).className  = 'type-btn ' + (type === 'expense' ? 'active-expense' : '');
+    document.getElementById(`typeIncBtn${year}`).className  = 'type-btn ' + (type === 'income'  ? 'active-income'  : '');
+    document.getElementById(`typeGoalBtn${year}`).className = 'type-btn ' + (type === 'goal'    ? 'active-goal'    : '');
+}
+
+function addCategory(year) {
+    const inp = document.getElementById(`newCatName${year}`);
+    const label = inp.value.trim();
+    if (!label) return;
+    const id = 'cat_' + Date.now();
+    budgetData.categories.push({ id, label, type: newCatType });
+    inp.value = '';
+    rebuildAll(true);
+    showToast('✅ Category added!');
+}
+
+function deleteCategory(id, year) {
+    const cat = getCats().find(c => c.id === id);
+    showConfirm({
+        icon: '🏷',
+        title: 'Remove category?',
+        message: `"${cat?.label || id}" and all its data will be permanently removed.`,
+        okLabel: 'Remove',
+        onOk: () => {
+            budgetData.categories = budgetData.categories.filter(c => c.id !== id);
+            budgetData.years.forEach(y => {
+                const entries   = budgetData.data[y]?.entries   || {};
+                const completed = budgetData.data[y]?.completed || {};
+                Object.keys(entries).forEach(k   => { if (k.endsWith('-' + id)) delete entries[k]; });
+                Object.keys(completed).forEach(k => { if (k.endsWith('-' + id)) delete completed[k]; });
+            });
+            rebuildAll(true);
+            showToast('Category removed.');
+        }
+    });
+}
+
+// ══════════════════════════════════════════
+// YEAR MANAGEMENT
+// ══════════════════════════════════════════
+function renderYearNav() {
+    const nav = document.getElementById('yearNav');
+    nav.innerHTML = budgetData.years.map(y => `
+        <button class="year-btn ${y === currentYear ? 'active' : ''}" onclick="switchYear(${y})">
+            ${y}
+            ${budgetData.years.length > 1 ? `<span class="del-year" onclick="event.stopPropagation();deleteYear(${y})">×</span>` : ''}
+        </button>
+    `).join('') + `<button class="add-year-btn" onclick="openModal()">+ Add Year</button>`;
+}
+
+function bottomNavSwitch(tab, btn) {
+    // Sync with the top tab buttons
+    const tabBtns = document.querySelectorAll(`#year${currentYear} .tab-btn`);
+    tabBtns.forEach(b => {
+        if (b.textContent.toLowerCase().includes(tab) ||
+            (tab === 'overview' && b.textContent.toLowerCase().includes('overview')) ||
+            (tab === 'settings' && b.textContent.includes('Settings'))) {
+            switchTab(tab, currentYear, b);
+        }
+    });
+    // Update bottom nav active state
+    document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+}
+
+function syncBottomNav(tab) {
+    document.querySelectorAll('.bnav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tab);
+    });
+}
+
+function openModal() { document.getElementById('addYearModal').classList.add('open'); document.getElementById('newYearInput').focus(); }
+function closeModal() { document.getElementById('addYearModal').classList.remove('open'); }
+
+// ── Shared confirm modal ──────────────────────────────────────────────────────
+let _confirmCallback = null;
+function showConfirm({ icon = '🗑', title, message, okLabel = 'Delete', onOk }) {
+    document.getElementById('confirmIcon').textContent    = icon;
+    document.getElementById('confirmTitle').textContent   = title;
+    document.getElementById('confirmMessage').textContent = message;
+    document.getElementById('confirmOkBtn').textContent   = okLabel;
+    _confirmCallback = onOk;
+    document.getElementById('confirmModal').classList.add('open');
+}
+function confirmOk()    { closeConfirm(); if (_confirmCallback) _confirmCallback(); _confirmCallback = null; }
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); _confirmCallback = null; }
+function confirmAddYear() {
+    const val = parseInt(document.getElementById('newYearInput').value);
+    if (!val || val < 2020 || val > 2040) { showToast('Enter a year between 2020–2040', true); return; }
+    if (budgetData.years.includes(val)) { showToast('Year already exists!', true); return; }
+    budgetData.years.push(val); budgetData.years.sort((a,b)=>a-b);
+    budgetData.data[val] = { entries: {}, completed: {}, goals: { savings: 0, ef: 0, invest: 0 } };
+    closeModal();
+    buildYearContainer(val);
+    renderYearNav();
+    switchYear(val);
+    autoSave();
+    showToast('Year ' + val + ' added!');
+}
+document.getElementById('newYearInput').addEventListener('keydown', e => { if (e.key === 'Enter') confirmAddYear(); });
+
+function deleteYear(year) {
+    showConfirm({
+        icon: '📅',
+        title: `Delete ${year}?`,
+        message: `All budget data for ${year} will be permanently removed.`,
+        okLabel: 'Delete Year',
+        onOk: () => {
+            budgetData.years = budgetData.years.filter(y => y !== year);
+            delete budgetData.data[year];
+            document.getElementById(`year${year}`)?.remove();
+            if (currentYear === year) currentYear = budgetData.years[0];
+            renderYearNav(); switchYear(currentYear); autoSave();
+            showToast('Year ' + year + ' deleted.');
+        }
+    });
+}
+
+function switchYear(year) {
+    currentYear = year;
+    document.querySelectorAll('.year-container').forEach(c => c.classList.remove('active'));
+    const c = document.getElementById(`year${year}`);
+    if (c) c.classList.add('active');
+    renderYearNav();
+    refreshCharts(year);
+    autoSave();
+}
+
+// ══════════════════════════════════════════
+// BUILD YEAR CONTAINER
+// ══════════════════════════════════════════
+function buildYearContainer(year) {
+    if (document.getElementById(`year${year}`)) return;
+    const div = document.createElement('div');
+    div.className = 'year-container';
+    div.id = `year${year}`;
+
+    const goalCats = getGoalCats();
+
+    div.innerHTML = `
+        <div class="section-tabs">
+            <button class="tab-btn active" onclick="switchTab('overview','${year}',this)">Overview</button>
+            <button class="tab-btn" onclick="switchTab('table','${year}',this)">Monthly Table</button>
+            <button class="tab-btn" onclick="switchTab('charts','${year}',this)">Charts</button>
+            <button class="tab-btn tab-settings-btn" onclick="switchTab('settings','${year}',this)">&#9881;&#xFE0F; Settings</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div class="tab-panel active" id="tab-overview-${year}">
+            <div class="overview-wrap" id="overviewWrap${year}"></div>
+        </div>
+
+        <!-- TABLE TAB -->
+        <div class="tab-panel" id="tab-table-${year}">
+            <div class="table-wrapper">
+                <div class="table-top">
+                    <h2>Monthly Budget Breakdown &mdash; ${year}</h2>
+                    <div class="table-legend">
+                        <span><span class="legend-dot" style="background:var(--green-primary)"></span>Expense</span>
+                        <span><span class="legend-dot" style="background:var(--income-color)"></span>Income</span>
+                        <span><span class="legend-dot" style="background:var(--net-color)"></span>Unallocated</span>
+                    </div>
+                </div>
+                <table>
+                    <thead id="tableHead${year}"></thead>
+                    <tbody id="tableBody${year}"></tbody>
+                </table>
+            </div>
+
+            <!-- SAVINGS PROJECTION -->
+            <div class="proj-inline-wrap" id="projInline-${year}">
+                <button class="proj-inline-toggle" onclick="toggleProjSection(${year})">
+                    <span id="projToggleIcon-${year}">▶</span>
+                    <span>Savings Projection</span>
+                    <span class="proj-inline-badge">Maya 4–8% p.a.</span>
+                </button>
+                <div class="proj-inline-body" id="projInlineBody-${year}" style="display:none;">
+                    <div class="proj-chart-header">
+                        <div>
+                            <div class="proj-chart-sub" style="margin-top:0;">Maya tiered rates: <strong style="color:var(--gold);font-weight:600">4% → 4.5% → 5% → 6.5% → 8% p.a.</strong> per ₱20k tier. Daily accrual: <strong style="color:var(--gold);font-weight:600">balance × rate × (1/365)</strong>. Data source: <strong style="color:var(--gold);font-weight:600">Deposit Log entries only</strong> — log your actual deposits below.</div>
+                        </div>
+                        <div class="proj-toggle-wrap">
+                            <label class="proj-toggle-label">Show months ahead</label>
+                            <select class="proj-months-select" id="projMonths-${year}" onchange="buildSavingsProjectionChart(${year})">
+                                <option value="6">6 months</option>
+                                <option value="12" selected>12 months</option>
+                                <option value="24">24 months</option>
+                                <option value="36">36 months</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container proj-chart-container"><canvas id="chart-proj-${year}"></canvas></div>
+                    <div class="proj-summary-row" id="projSummary-${year}"></div>
+                    <div class="deposit-log-section-top">
+                        <div class="proj-chart-sub" style="margin:0;">Log your actual deposits below. Each entry computes interest from its exact date.</div>
+                        <button class="deposit-sync-btn" onclick="syncFromTable(${year})">⟳ Sync from table</button>
+                    </div>
+                    <div class="deposit-log-wrap" id="depositLogWrap-${year}">
+                        <!-- rendered by renderDepositEntries(year) -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS TAB -->
+        <div class="tab-panel" id="tab-charts-${year}">
+            <div class="charts-grid">
+                <div class="chart-card wide">
+                    <h3>Monthly Income vs Expenses vs Net</h3>
+                    <div class="chart-container"><canvas id="chart-trend-${year}"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Expense Breakdown (Yearly)</h3>
+                    <div class="chart-container"><canvas id="chart-donut-${year}"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Savings Goals Progress</h3>
+                    <div class="chart-container"><canvas id="chart-goals-${year}"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div class="tab-panel" id="tab-settings-${year}">
+            <div class="settings-wrap">
+                <div class="settings-section">
+                    <div class="settings-section-title">&#128194; Manage Categories</div>
+                    <div class="settings-section-desc">Add or remove budget categories. Changes apply across all years.</div>
+                    <div class="category-manager" id="catManager${year}"></div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title">&#128190; Data Management</div>
+                    <div class="settings-section-desc">Export your data as a backup, import from a previous backup, or reset everything.</div>
+                    <div class="settings-actions">
+                        <button class="settings-btn s-export" onclick="exportData()">&#8595; Export JSON</button>
+                        <label class="settings-btn s-import">&#8593; Import JSON<input type="file" class="file-input" accept=".json" onchange="importData(event)"></label>
+                        <button class="settings-btn s-danger" onclick="clearAll()">&#10005; Clear All Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('yearContainers').appendChild(div);
+    renderSummaryCards(year);
+    renderCategoryManager(year);
+    buildTable(year);
+    loadYearData(year);
+}
+
+function switchTab(tab, year, btn) {
+    const container = document.getElementById(`year${year}`);
+    container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tab}-${year}`).classList.add('active');
+    if (btn) btn.classList.add('active');
+    syncBottomNav(tab);
+    if (tab === 'charts') setTimeout(() => refreshCharts(year), 100);
+    if (tab === 'table')  setTimeout(() => renderDepositEntries(year), 50);
+}
+
+// ══════════════════════════════════════════
+// SUMMARY CARDS
+// ══════════════════════════════════════════
+function renderSummaryCards(year) {
+    const wrap = document.getElementById('overviewWrap' + year);
+    if (!wrap) return;
+    const goalCats = getGoalCats();
+
+    const goalsHTML = goalCats.map(cat =>
+        '<div class="goal-card">' +
+        '<div class="goal-card-top">' +
+            '<div class="goal-card-label">' + cat.label + '</div>' +
+            '<div class="goal-card-pct-badge" id="goalPct_' + cat.id + '_' + year + '">0%</div>' +
+        '</div>' +
+        '<div class="goal-card-value">&#8369;<span id="totalGoal_' + cat.id + '_' + year + '">0</span></div>' +
+        '<div class="goal-track"><div class="goal-fill" id="goalBar_' + cat.id + '_' + year + '" style="width:0%"></div></div>' +
+        '<div class="goal-input-row">' +
+            '<input type="number" id="goal_' + cat.id + '_' + year + '" placeholder="Target amount" oninput="setGoal(' + year + ',\'' + cat.id + '\')">' +
+            '<button onclick="setGoal(' + year + ',\'' + cat.id + '\')">Set</button>' +
+        '</div>' +
+        '<div class="goal-pct-text" id="goalPctText_' + cat.id + '_' + year + '">Set a target to track progress</div>' +
+        '</div>'
+    ).join('');
+
+    wrap.innerHTML =
+        '<div class="hero-row">' +
+            '<div class="hero-card hc-income">' +
+                '<div class="hero-card-icon">&#8593;</div>' +
+                '<div class="hero-label">Total Income</div>' +
+                '<div class="hero-value hv-teal">&#8369;<span id="totalIncome' + year + '">0</span></div>' +
+                '<div class="hero-sub">All cutoffs combined</div>' +
+                '<div class="flow-bar-wrap">' +
+                    '<div class="flow-bar-track"><div class="flow-bar-fill fb-teal" id="incomeBar' + year + '" style="width:100%"></div></div>' +
+                    '<div class="flow-bar-label"><span>Income</span><span id="incomeBarPct' + year + '">&#8212;</span></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="hero-card hc-expense">' +
+                '<div class="hero-card-icon">&#8595;</div>' +
+                '<div class="hero-label">Total Expenses</div>' +
+                '<div class="hero-value hv-rose">&#8369;<span id="totalExpenses' + year + '">0</span></div>' +
+                '<div class="hero-sub">Checked items only</div>' +
+                '<div class="flow-bar-wrap">' +
+                    '<div class="flow-bar-track"><div class="flow-bar-fill fb-rose" id="expenseBar' + year + '" style="width:0%"></div></div>' +
+                    '<div class="flow-bar-label"><span>of income</span><span id="expenseBarPct' + year + '">&#8212;</span></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="hero-card hc-unalloc">' +
+                '<div class="hero-card-icon">&#9670;</div>' +
+                '<div class="hero-label">Unallocated</div>' +
+                '<div class="hero-value hv-violet" id="netValue' + year + '">&#8369;0</div>' +
+                '<div class="hero-sub"><span class="tag tag-neutral" id="netLabel' + year + '">&#8212;</span></div>' +
+                '<div class="flow-bar-wrap">' +
+                    '<div class="flow-bar-track"><div class="flow-bar-fill fb-green" id="unallocBar' + year + '" style="width:0%"></div></div>' +
+                    '<div class="flow-bar-label"><span>remaining</span><span id="unallocBarPct' + year + '">&#8212;</span></div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="goals-row">' + goalsHTML + '</div>' +
+        '<div class="breakdown-row">' +
+            '<div class="breakdown-title">Spending Breakdown</div>' +
+            '<div class="breakdown-bars" id="breakdownBars' + year + '"><div style="color:var(--muted);font-size:0.8em;">No data yet</div></div>' +
+        '</div>';
+}
+
+
+// ══════════════════════════════════════════
+// BUILD TABLE
+// ══════════════════════════════════════════
+function buildTable(year) {
+    const head = document.getElementById(`tableHead${year}`);
+    const body = document.getElementById(`tableBody${year}`);
+    if (!head || !body) return;
+
+    const cats = getCats();
+    head.innerHTML = `<tr>
+        <th style="text-align:left">Month</th>
+        ${cats.map(c => `<th class="${c.type === 'income' ? 'income-header' : c.type === 'goal' ? 'goal-header' : ''}">${c.label}<br><small style="opacity:0.5;font-weight:400">✓ | Amt</small></th>`).join('')}
+        <th class="net-header">Unallocated</th>
+    </tr>`;
+
+    body.innerHTML = '';
+    const today = new Date();
+    const nowMonth = today.getMonth();
+    const nowYear = today.getFullYear();
+
+    months.forEach((month, mIdx) => {
+        month.dates.forEach((dateRange, dIdx) => {
+            const rowId = `${year}-${mIdx}-${dIdx}`;
+            const isCurrentMonth = (year === nowYear && mIdx === nowMonth);
+            const tr = document.createElement('tr');
+            tr.id = `row-${rowId}`;
+            if (isCurrentMonth) tr.classList.add('current-month');
+
+            tr.innerHTML = `
+                <td class="month-label">
+                    ${dIdx === 0 ? month.name : ''}
+                    <small>${dateRange}</small>
+                </td>
+                ${cats.map(c => `
+                <td>
+                    <div class="cell-inner ${c.type === 'goal' ? 'goal-cell' : ''}" id="ci-${rowId}-${c.id}">
+                        ${(c.type === 'expense' || c.type === 'goal') ? `<input type="checkbox" data-year="${year}" data-row="${rowId}" data-cat="${c.id}" onchange="toggleDone(${year},'${rowId}','${c.id}')">` : ''}
+                        <input type="number" placeholder="0" min="0"
+                            data-year="${year}" data-row="${rowId}" data-cat="${c.id}"
+                            class="${c.type === 'income' ? 'income-input' : ''}"
+                            oninput="onAmountInput(${year})"
+                            onchange="clampInput(this)">
+                    </div>
+                </td>`).join('')}
+                <td class="net-cell zero" id="net-${rowId}">—</td>
+            `;
+            body.appendChild(tr);
+        });
+    });
+}
+
+// ══════════════════════════════════════════
+// LOAD DATA INTO DOM
+// ══════════════════════════════════════════
+function loadYearData(year) {
+    const entries = budgetData.data[year]?.entries || {};
+    const completed = budgetData.data[year]?.completed || {};
+    const goals = budgetData.data[year]?.goals || {};
+
+    document.querySelectorAll(`input[data-year="${year}"]`).forEach(inp => {
+        const key = inp.dataset.row + '-' + inp.dataset.cat;
+        if (inp.type === 'checkbox') {
+            inp.checked = !!completed[key];
+            const ci = document.getElementById(`ci-${inp.dataset.row}-${inp.dataset.cat}`);
+            if (inp.checked && ci) ci.classList.add('done');
+        } else if (inp.type === 'number') {
+            if (entries[key]) inp.value = entries[key];
+        }
+    });
+
+    // Load goals
+    getCats().filter(c => c.goal).forEach(c => {
+        const el = document.getElementById(`goal_${c.id}_${year}`);
+        if (el && goals[c.id]) el.value = goals[c.id];
+    });
+
+    updateTotals(year);
+}
+
+// ══════════════════════════════════════════
+// LOGIC: TOTALS & NET
+// ══════════════════════════════════════════
+function toggleDone(year, rowId, catId) {
+    const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${rowId}"][data-cat="${catId}"]`);
+    const ci = document.getElementById(`ci-${rowId}-${catId}`);
+    if (ci) ci.classList.toggle('done', cb.checked);
+    autoSave();
+}
+
+function onAmountInput(year) { updateTotals(year); }
+
+function updateTotals(year) {
+    const cats = getCats();
+    const expCats = cats.filter(c => c.type === 'expense');
+    const incCats = cats.filter(c => c.type === 'income');
+
+    // Per-row unallocated = income - expenses - goals
+    months.forEach((month, mIdx) => {
+        month.dates.forEach((_, dIdx) => {
+            const rowId = `${year}-${mIdx}-${dIdx}`;
+            let rowInc = 0, rowAllocated = 0;
+            cats.forEach(c => {
+                const inp = document.querySelector(`input[type="number"][data-year="${year}"][data-row="${rowId}"][data-cat="${c.id}"]`);
+                const val = parseFloat(inp?.value) || 0;
+                if (c.type === 'income') {
+                    rowInc += val;
+                } else if (c.type === 'expense') {
+                    // expenses: count only if checked
+                    const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${rowId}"][data-cat="${c.id}"]`);
+                    if (cb && cb.checked) rowAllocated += val;
+                } else if (c.type === 'goal') {
+                    // goals: count only if checked
+                    const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${rowId}"][data-cat="${c.id}"]`);
+                    if (cb && cb.checked) rowAllocated += val;
+                }
+            });
+            const unalloc = rowInc - rowAllocated;
+            const netEl = document.getElementById(`net-${rowId}`);
+            if (netEl) {
+                if (rowInc === 0) {
+                    netEl.textContent = '—';
+                    netEl.className = 'net-cell zero';
+                } else {
+                    netEl.textContent = (unalloc >= 0 ? '+₱' : '-₱') + Math.abs(unalloc).toLocaleString();
+                    netEl.className = 'net-cell ' + (unalloc > 0 ? 'positive' : unalloc < 0 ? 'negative' : 'zero');
+                }
+            }
+        });
+    });
+
+    // Yearly totals
+    let totalInc = 0, totalExp = 0;
+    const catTotals = {};
+    cats.forEach(c => { catTotals[c.id] = 0; });
+
+    document.querySelectorAll(`input[type="number"][data-year="${year}"]`).forEach(inp => {
+        const val = parseFloat(inp.value) || 0;
+        if (!val) return;
+        const cat     = inp.dataset.cat;
+        const row     = inp.dataset.row;
+        const catInfo = cats.find(c => c.id === cat);
+        if (!catInfo) return;
+        // for expense and goal: only count if checkbox is checked
+        if (catInfo.type === 'expense' || catInfo.type === 'goal') {
+            const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${row}"][data-cat="${cat}"]`);
+            if (!cb || !cb.checked) return;
+        }
+        catTotals[cat] = (catTotals[cat] || 0) + val;
+        if (catInfo.type === 'income') totalInc += val;
+        else if (catInfo.type === 'expense') totalExp += val;
+        // goal: tracked via catTotals only
+    });
+
+    const incEl    = document.getElementById(`totalIncome${year}`);
+    const expEl    = document.getElementById(`totalExpenses${year}`);
+    const netEl    = document.getElementById(`netValue${year}`);
+    const netLblEl = document.getElementById(`netLabel${year}`);
+
+    // totalGoals = sum of all goal-type entries
+    let totalGoals = 0;
+    cats.filter(c => c.type === 'goal').forEach(c => { totalGoals += catTotals[c.id] || 0; });
+
+    if (incEl) incEl.textContent = totalInc.toLocaleString();
+    if (expEl) expEl.textContent = totalExp.toLocaleString();
+    const unallocated = totalInc - totalExp - totalGoals;
+
+    if (netEl) {
+        netEl.textContent = '₱' + Math.abs(unallocated).toLocaleString();
+        netEl.style.color = unallocated >= 0 ? 'var(--violet)' : 'var(--rose)';
+    }
+    if (netLblEl) {
+        if (totalInc === 0) {
+            netLblEl.className = 'tag tag-neutral';
+            netLblEl.textContent = 'No income yet';
+        } else if (unallocated > 0) {
+            netLblEl.className = 'tag tag-surplus';
+            netLblEl.textContent = '↓ Unallocated';
+        } else if (unallocated < 0) {
+            netLblEl.className = 'tag tag-deficit';
+            netLblEl.textContent = '⚠ Over-budget';
+        } else {
+            netLblEl.className = 'tag tag-exact';
+            netLblEl.textContent = '✔ Exact';
+        }
+    }
+
+    // Flow bars
+    const expPct     = totalInc > 0 ? Math.min((totalExp / totalInc) * 100, 100) : 0;
+    const unallocPct = totalInc > 0 ? Math.max(Math.min((unallocated / totalInc) * 100, 100), 0) : 0;
+    const q = (id) => document.getElementById(id);
+    const expBarEl       = q(`expenseBar${year}`);
+    const expBarPctEl    = q(`expenseBarPct${year}`);
+    const unallocBarEl   = q(`unallocBar${year}`);
+    const unallocBarPctEl= q(`unallocBarPct${year}`);
+    const incomeBarPctEl = q(`incomeBarPct${year}`);
+    if (expBarEl)        expBarEl.style.width       = expPct + '%';
+    if (expBarPctEl)     expBarPctEl.textContent     = totalInc > 0 ? expPct.toFixed(0) + '% of income' : '—';
+    if (unallocBarEl)    unallocBarEl.style.width    = unallocPct + '%';
+    if (unallocBarPctEl) unallocBarPctEl.textContent = totalInc > 0 ? unallocPct.toFixed(0) + '% free' : '—';
+    if (incomeBarPctEl)  incomeBarPctEl.textContent  = totalInc > 0 ? '₱' + totalInc.toLocaleString() + ' total' : '—';
+
+    // Spending breakdown bars
+    const bdEl = document.getElementById(`breakdownBars${year}`);
+    if (bdEl) {
+        const allCats = getCats();
+        const catEntries = allCats.map(c => ({ label: c.label, type: c.type, val: catTotals[c.id] || 0 }))
+            .filter(c => c.val > 0);
+        const maxVal = Math.max(...catEntries.map(c => c.val), 1);
+        if (catEntries.length === 0) {
+            bdEl.innerHTML = '<div style="color:var(--muted);font-size:0.8em;padding:4px 0;">No data yet — start filling in your monthly table.</div>';
+        } else {
+            bdEl.innerHTML = catEntries
+                .sort((a,b) => b.val - a.val)
+                .map(c => {
+                    const pct = (c.val / maxVal * 100).toFixed(0);
+                    const fc  = c.type === 'income' ? 'bk-fill bk-income' : c.type === 'goal' ? 'bk-fill bk-goal' : 'bk-fill';
+                    return '<div class="bk-row">'
+                         + '<div class="bk-label">' + c.label + '</div>'
+                         + '<div class="bk-track"><div class="' + fc + '" style="width:' + pct + '%"></div></div>'
+                         + '<div class="bk-amount">₱' + c.val.toLocaleString() + '</div>'
+                         + '</div>';
+                }).join('');
+        }
+    }
+
+    // Goal progress
+    const goals = budgetData.data[year]?.goals || {};
+    getCats().filter(c => c.goal).forEach(c => {
+        const current   = catTotals[c.id] || 0;
+        const goal      = goals[c.id] || 0;
+        const pct       = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+        const totalEl   = q(`totalGoal_${c.id}_${year}`);
+        const barEl     = q(`goalBar_${c.id}_${year}`);
+        const pctEl     = q(`goalPct_${c.id}_${year}`);
+        const pctTextEl = q(`goalPctText_${c.id}_${year}`);
+        if (totalEl)   totalEl.textContent   = current.toLocaleString();
+        if (barEl)     barEl.style.width     = pct + '%';
+        if (pctEl)     pctEl.textContent     = pct.toFixed(0) + '%';
+        if (pctTextEl) pctTextEl.textContent = goal > 0
+            ? '₱' + current.toLocaleString() + ' of ₱' + goal.toLocaleString() + ' target'
+            : 'Set a target to track progress';
+    });
+
+    autoSave();
+}
+
+
+function setGoal(year, catId) {
+    const inp = document.getElementById(`goal_${catId}_${year}`);
+    if (!budgetData.data[year].goals) budgetData.data[year].goals = {};
+    budgetData.data[year].goals[catId] = parseFloat(inp?.value) || 0;
+    updateTotals(year);
+}
+
+// ══════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════
+const CHART_COLORS = {
+    income: 'rgba(78,205,196,0.8)',
+    expense: 'rgba(240,107,107,0.8)',
+    net: 'rgba(167,139,250,0.8)',
+    palette: [
+        'rgba(126,203,111,0.8)', 'rgba(100,216,203,0.8)', 'rgba(167,139,250,0.8)',
+        'rgba(247,127,107,0.8)', 'rgba(251,191,36,0.8)', 'rgba(96,165,250,0.8)',
+        'rgba(244,114,182,0.8)', 'rgba(52,211,153,0.8)', 'rgba(251,146,60,0.8)',
+        'rgba(129,140,248,0.8)',
+    ]
+};
+
+function refreshCharts(year) {
+    buildTrendChart(year);
+    buildDonutChart(year);
+    buildGoalsChart(year);
+}
+
+function destroyChart(id) {
+    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+function getMonthlyData(year) {
+    const cats = getCats();
+    const result = months.map((m, mIdx) => {
+        let inc = 0, exp = 0;
+        const catMap = {};
+        cats.forEach(c => { catMap[c.id] = 0; });
+        m.dates.forEach((_, dIdx) => {
+            const rowId = `${year}-${mIdx}-${dIdx}`;
+            cats.forEach(c => {
+                const inp = document.querySelector(`input[type="number"][data-year="${year}"][data-row="${rowId}"][data-cat="${c.id}"]`);
+                const val = parseFloat(inp?.value) || 0;
+                if (!val) return;
+                // expense and goal: only count if checked
+                if (c.type === 'expense' || c.type === 'goal') {
+                    const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${rowId}"][data-cat="${c.id}"]`);
+                    if (!cb || !cb.checked) return;
+                }
+                catMap[c.id] += val;
+                if (c.type === 'income') inc += val;
+                else exp += val;
+            });
+        });
+        return { month: m.short, income: inc, expense: exp, net: inc - exp, catMap };
+    });
+    return result;
+}
+
+function buildTrendChart(year) {
+    destroyChart(`trend-${year}`);
+    const canvas = document.getElementById(`chart-trend-${year}`);
+    if (!canvas) return;
+    const data = getMonthlyData(year);
+    charts[`trend-${year}`] = new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: data.map(d => d.month),
+            datasets: [
+                { label: 'Income', data: data.map(d => d.income), backgroundColor: CHART_COLORS.income, borderRadius: 6, borderSkipped: false },
+                { label: 'Expenses', data: data.map(d => d.expense), backgroundColor: CHART_COLORS.expense, borderRadius: 6, borderSkipped: false },
+                { label: 'Net', data: data.map(d => d.net), type: 'line', borderColor: CHART_COLORS.net, backgroundColor: 'rgba(167,139,250,0.1)', tension: 0.4, pointRadius: 4, pointBackgroundColor: CHART_COLORS.net, fill: true, yAxisID: 'y' },
+            ]
+        },
+        options: chartOptions({ title: '', legend: true })
+    });
+}
+
+function buildDonutChart(year) {
+    destroyChart(`donut-${year}`);
+    const canvas = document.getElementById(`chart-donut-${year}`);
+    if (!canvas) return;
+    const expCats = getExpenseCats();
+    const totals = {};
+    expCats.forEach(c => { totals[c.id] = 0; });
+    document.querySelectorAll(`input[type="number"][data-year="${year}"]`).forEach(inp => {
+        const cat = inp.dataset.cat;
+        const row = inp.dataset.row;
+        const catInfo = expCats.find(c => c.id === cat);
+        if (!catInfo) return;
+        const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${row}"][data-cat="${cat}"]`);
+        if (!cb || !cb.checked) return;
+        totals[cat] += parseFloat(inp.value) || 0;
+    });
+    const labels = expCats.filter(c => totals[c.id] > 0).map(c => c.label);
+    const values = expCats.filter(c => totals[c.id] > 0).map(c => totals[c.id]);
+    if (!values.length) { canvas.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.9em;">No expense data yet</div>'; return; }
+    charts[`donut-${year}`] = new Chart(canvas, {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data: values, backgroundColor: CHART_COLORS.palette, borderWidth: 2, borderColor: 'var(--bg-deep)', hoverOffset: 8 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false, cutout: '65%',
+            plugins: {
+                legend: { position: 'right', labels: { color: 'rgba(240,242,245,0.55)', font: { family: 'Instrument Sans', size: 11 }, padding: 14, boxWidth: 12 } },
+                tooltip: { callbacks: { label: ctx => ` ₱${ctx.parsed.toLocaleString()}` }, ...tooltipStyle() }
+            }
+        }
+    });
+}
+
+function buildGoalsChart(year) {
+    destroyChart(`goals-${year}`);
+    const canvas = document.getElementById(`chart-goals-${year}`);
+    if (!canvas) return;
+    const goalCats = getGoalCats();
+    const goals = budgetData.data[year]?.goals || {};
+    const labels = [], current = [], target = [];
+    goalCats.forEach(c => {
+        let sum = 0;
+        document.querySelectorAll(`input[type="number"][data-year="${year}"][data-cat="${c.id}"]`).forEach(inp => {
+            const cb = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${inp.dataset.row}"][data-cat="${c.id}"]`);
+            if (cb && cb.checked) sum += parseFloat(inp.value) || 0;
+        });
+        labels.push(c.label);
+        current.push(sum);
+        target.push(goals[c.id] || 0);
+    });
+    charts[`goals-${year}`] = new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Current', data: current, backgroundColor: 'rgba(126,203,111,0.8)', borderRadius: 6 },
+                { label: 'Goal', data: target, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
+            ]
+        },
+        options: chartOptions({ title: '', legend: true })
+    });
+}
+
+function toggleProjSection(year) {
+    const body = document.getElementById(`projInlineBody-${year}`);
+    const icon = document.getElementById(`projToggleIcon-${year}`);
+    const btn  = body?.previousElementSibling;
+    if (!body) return;
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    if (icon) icon.textContent = isOpen ? '▶' : '▼';
+    if (btn)  btn.classList.toggle('open', !isOpen);
+    if (!isOpen) {
+        setTimeout(() => {
+            buildSavingsProjectionChart(year);
+            renderDepositEntries(year);
+        }, 80);
+    }
+}
+
+// ══════════════════════════════════════════
+// DEPOSIT LOG
+// budgetData.data[year].depositLog = [
+//   { id: 'dl_xxx', catId: 'ef', date: '2025-05-03', amount: 500 }, ...
+// ]
+// ══════════════════════════════════════════
+
+function getDepositLog(year) {
+    if (!budgetData.data[year]) return [];
+    if (!budgetData.data[year].depositLog) budgetData.data[year].depositLog = [];
+    return budgetData.data[year].depositLog;
+}
+
+function renderDepositEntries(year) {
+    const wrap = document.getElementById(`depositLogWrap-${year}`);
+    if (!wrap) return;
+    const log = getDepositLog(year);
+    const goalCats = getGoalCats();
+    const goalColors = [
+        { line: 'rgba(232,184,75,1)',  btn: 'var(--gold)',   btnDim: 'var(--gold-dim)'   },
+        { line: 'rgba(78,205,196,1)',  btn: 'var(--teal)',   btnDim: 'var(--teal-dim)'   },
+        { line: 'rgba(167,139,250,1)', btn: 'var(--violet)', btnDim: 'var(--violet-dim)' },
+        { line: 'rgba(95,217,135,1)',  btn: 'var(--green)',  btnDim: 'var(--green-dim)'  },
+        { line: 'rgba(240,107,107,1)', btn: 'var(--rose)',   btnDim: 'var(--rose-dim)'   },
+    ];
+
+    wrap.innerHTML = goalCats.slice(0, 3).map((cat, ci) => {
+        const color   = goalColors[ci % goalColors.length];
+        const entries = [...log.filter(e => e.catId === cat.id)]
+            .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+        const rows = entries.length > 0
+            ? entries.map(entry => {
+                const isSynced = entry.source === 'table';
+                return `<div class="deposit-entry ${isSynced ? 'deposit-entry-synced' : ''}" id="de-${entry.id}">
+                    <input type="date" value="${entry.date || ''}"
+                        ${isSynced ? 'disabled' : ''}
+                        onchange="updateDepositEntry('${year}','${entry.id}','date',this.value)">
+                    <input type="number" placeholder="Amount" min="0" value="${entry.amount || ''}"
+                        ${isSynced ? 'disabled' : ''}
+                        onchange="updateDepositEntry('${year}','${entry.id}','amount',this.value)">
+                    <button class="deposit-del-btn" onclick="deleteDepositEntry('${year}','${entry.id}')">✕</button>
+                </div>`;
+            }).join('')
+            : `<div class="deposit-entry-empty">No deposits yet — click + Add</div>`;
+
+        return `<div class="deposit-log-section" style="border-color:${color.line.replace('1)','0.2)')};">
+            <div class="deposit-log-section-header" style="border-bottom:1px solid ${color.line.replace('1)','0.12)')};">
+                <div class="deposit-log-section-title" style="color:${color.line}">${cat.label}</div>
+                <button class="deposit-add-btn"
+                    style="color:${color.btn};border-color:${color.line.replace('1)','0.3)')}"
+                    onmouseover="this.style.background='${color.btnDim}'"
+                    onmouseout="this.style.background='transparent'"
+                    onclick="addDepositEntry('${year}','${cat.id}')">+ Add</button>
+            </div>
+            <div class="deposit-section-body" id="depositSection-${year}-${cat.id}">${rows}</div>
+        </div>`;
+    }).join('');
+}
+
+function addDepositEntry(year, catId) {
+    const log = getDepositLog(year);
+    const today = new Date().toISOString().split('T')[0];
+    log.push({ id: 'dl_' + Date.now(), catId, date: today, amount: '' });
+    renderDepositEntries(year);
+    autoSave();
+}
+
+function updateDepositEntry(year, id, field, value) {
+    const entry = getDepositLog(year).find(e => e.id === id);
+    if (!entry) return;
+    if (field === 'amount') {
+        const amt = parseFloat(value);
+        if (isNaN(amt) || amt < 0) return;
+        if (amt > 10_000_000) { showToast('⚠ Value capped at ₱10,000,000', true); value = 10_000_000; }
+        entry.amount = parseFloat(value) || 0;
+    } else if (field === 'date') {
+        // Validate date is within ±5 years of selected year
+        const d = new Date(value + 'T00:00:00');
+        if (isNaN(d.getTime())) { showToast('⚠ Invalid date', true); return; }
+        entry.date = value;
+    } else {
+        entry[field] = value;
+    }
+    autoSave();
+    if (field === 'date') renderDepositEntries(year);
+    buildSavingsProjectionChart(parseInt(year));
+}
+
+// Auto-populate deposit log from checked table rows
+// dIdx 0 = 1st cutoff → day 1, dIdx 1 = 2nd cutoff → day 16
+// Creates entries tagged with source:'table' so they can be refreshed without clobbering manual entries
+function syncFromTable(year) {
+    if (!budgetData.data[year]) return;
+    const log = getDepositLog(year);
+    const goalCats = getGoalCats();
+
+    // Remove all previously synced table entries (keep manual ones)
+    budgetData.data[year].depositLog = log.filter(e => e.source !== 'table');
+
+    months.forEach((month, mIdx) => {
+        month.dates.forEach((_, dIdx) => {
+            const rowId  = `${year}-${mIdx}-${dIdx}`;
+            const day    = dIdx === 0 ? 1 : 16;
+            const dateStr = `${year}-${String(mIdx + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+
+            goalCats.forEach(cat => {
+                const cb  = document.querySelector(`input[type="checkbox"][data-year="${year}"][data-row="${rowId}"][data-cat="${cat.id}"]`);
+                if (!cb || !cb.checked) return;
+                const inp = document.querySelector(`input[type="number"][data-year="${year}"][data-row="${rowId}"][data-cat="${cat.id}"]`);
+                const amt = parseFloat(inp?.value) || 0;
+                if (!amt) return;
+
+                budgetData.data[year].depositLog.push({
+                    id:     'dl_sync_' + year + '_' + mIdx + '_' + dIdx + '_' + cat.id,
+                    catId:  cat.id,
+                    date:   dateStr,
+                    amount: amt,
+                    source: 'table'  // marks this as auto-synced
+                });
+            });
+        });
+    });
+
+    renderDepositEntries(year);
+    buildSavingsProjectionChart(year);
+    autoSave();
+    showToast('Synced from table ✓');
+}
+
+function deleteDepositEntry(year, id) {
+    const entry = getDepositLog(year).find(e => e.id === id);
+    const label = entry ? `₱${(entry.amount||0).toLocaleString()} on ${entry.date || '—'}` : 'this entry';
+    showConfirm({
+        icon: '🗑',
+        title: 'Remove deposit?',
+        message: `${label} will be removed from the projection.`,
+        okLabel: 'Remove',
+        onOk: () => {
+            if (!budgetData.data[year]) return;
+            budgetData.data[year].depositLog = getDepositLog(year).filter(e => e.id !== id);
+            renderDepositEntries(year);
+            buildSavingsProjectionChart(parseInt(year));
+            autoSave();
+        }
+    });
+}
+
+function buildSavingsProjectionChart(year) {
+    destroyChart(`proj-${year}`);
+    const canvas = document.getElementById(`chart-proj-${year}`);
+    const summaryEl = document.getElementById(`projSummary-${year}`);
+    if (!canvas) return;
+
+    // Maya TIERED daily interest (Goal accounts opened after Sep 4 2025)
+    // Each tier rate applies ONLY to the balance slice within that tier range.
+    // No interest earned above P100,000.
+    // Tier table:
+    //   P0        - P20,000   -> 4.0% p.a.
+    //   P20,000   - P40,000   -> 4.5% p.a.
+    //   P40,000   - P60,000   -> 5.0% p.a.
+    //   P60,000   - P80,000   -> 6.5% p.a.
+    //   P80,000   - P100,000  -> 8.0% p.a.
+    //   > P100,000            -> 0% (no interest)
+    // Daily interest = sum of (tier_slice * tier_rate / 365) for all tiers
+    // Monthly interest = sum of daily interest for each day in month
+
+    const MAYA_TIERS = [
+        { min: 0,      max: 20000,  rate: 0.040 },
+        { min: 20000,  max: 40000,  rate: 0.045 },
+        { min: 40000,  max: 60000,  rate: 0.050 },
+        { min: 60000,  max: 80000,  rate: 0.065 },
+        { min: 80000,  max: 100000, rate: 0.080 },
+    ];
+
+    function daysInMonth(monthIdx, yr) {
+        return new Date(yr, monthIdx + 1, 0).getDate();
+    }
+
+    function dailyInterest(balance) {
+        // Maya's exact formula: end-of-day balance × rate × (1/365)
+        // Applied per tier slice independently
+        let interest = 0;
+        for (const tier of MAYA_TIERS) {
+            if (balance <= tier.min) break;
+            const slice = Math.min(balance, tier.max) - tier.min;
+            interest += slice * tier.rate * (1 / 365);
+        }
+        return interest;
+    }
+
+    // deposits = array of { day: 1-31, amount: number } — multiple deposits on different days
+    function computeMonthInterestWithDeposits(balanceBefore, deposits, monthIdx, calYear) {
+        const days = daysInMonth(monthIdx, calYear);
+        let balance = balanceBefore;
+        let totalInterest = 0;
+        for (let d = 1; d <= days; d++) {
+            // Add any deposits scheduled for this day
+            deposits.forEach(dep => { if (dep.day === d) balance += dep.amount; });
+            totalInterest += dailyInterest(balance);
+        }
+        return { interest: totalInterest, endBalance: balance + totalInterest };
+    }
+
+    // Fallback: original 2-cutoff version
+    function computeMonthInterest(balanceBefore, firstHalfDeposit, secondHalfDeposit, monthIdx, calYear) {
+        return computeMonthInterestWithDeposits(
+            balanceBefore,
+            [{ day: 1, amount: firstHalfDeposit }, { day: 16, amount: secondHalfDeposit }],
+            monthIdx, calYear
+        );
+    }
+
+    const selectEl = document.getElementById(`projMonths-${year}`);
+    const monthsAhead = parseInt(selectEl?.value || '12');
+
+    const goalCats = getGoalCats();
+    if (!goalCats.length) {
+        canvas.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:0.9em;padding:20px;text-align:center;">No savings goal categories found.</div>';
+        return;
+    }
+
+    // --- Build deposit log indexed by catId → monthIdx → [{day, amount}] ---
+    // Sole data source for the projection.
+    const depositLog = getDepositLog(year);
+    const logByMonth = {};
+    goalCats.forEach(c => {
+        logByMonth[c.id] = Array(12).fill(null).map(() => []);
+    });
+    depositLog.forEach(entry => {
+        if (!entry.date || !entry.amount || !entry.catId) return;
+        const d = new Date(entry.date + 'T00:00:00');
+        if (d.getFullYear() !== year) return;
+        const mIdx   = d.getMonth();
+        const dayNum = d.getDate();
+        if (!logByMonth[entry.catId]) return;
+        logByMonth[entry.catId][mIdx].push({ day: dayNum, amount: parseFloat(entry.amount) || 0 });
+    });
+
+    // --- 3. Build projection timeline using Maya's daily formula ---
+    // totalDisplay = exactly what the user selected (6, 12, 24, 36 months from Jan of selected year)
+    const MONTH_NAMES  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    const totalDisplay = monthsAhead; // dropdown value IS the total months shown
+    const labels = [];
+    for (let i = 0; i < totalDisplay; i++) {
+        const calYear = year + Math.floor(i / 12);
+        const calMon  = i % 12;
+        labels.push(MONTH_NAMES[calMon] + ' \'' + String(calYear).slice(2));
+    }
+
+    const goalColors = [
+        { line: 'rgba(232,184,75,1)',  fill: 'rgba(232,184,75,0.08)'  },
+        { line: 'rgba(78,205,196,1)',  fill: 'rgba(78,205,196,0.08)'  },
+        { line: 'rgba(167,139,250,1)', fill: 'rgba(167,139,250,0.08)' },
+        { line: 'rgba(95,217,135,1)',  fill: 'rgba(95,217,135,0.08)'  },
+        { line: 'rgba(240,107,107,1)', fill: 'rgba(240,107,107,0.08)' },
+    ];
+
+    const projEndValues    = {};
+    const projTotalDeposit = {};
+    const monthlyInterestLog = {};
+    const monthlyDepositLog  = {};
+    const datasets = [];
+
+    goalCats.forEach((cat, cIdx) => {
+        const color = goalColors[cIdx % goalColors.length];
+        const data  = [];
+        monthlyInterestLog[cat.id] = [];
+        monthlyDepositLog[cat.id]  = [];
+        let balance = 0;
+        let totalDeposited = 0;
+
+        for (let i = 0; i < totalDisplay; i++) {
+            const calYear = year + Math.floor(i / 12);
+            const calMon  = i % 12;
+
+            let deposited = 0;
+            let result;
+
+            if (i < Math.min(12, totalDisplay)) {
+                // Within selected year — use deposit log entries (exact day per entry)
+                const entries = logByMonth[cat.id]?.[calMon] || [];
+                deposited = entries.reduce((s, e) => s + e.amount, 0);
+                result = computeMonthInterestWithDeposits(balance, entries, calMon, calYear);
+            } else {
+                // Beyond selected year — interest only, no new deposits
+                deposited = 0;
+                result = computeMonthInterestWithDeposits(balance, [], calMon, calYear);
+            }
+
+            totalDeposited += deposited;
+            balance = result.endBalance;
+
+            const roundedBalance  = Math.round(balance * 100) / 100;
+            const roundedInterest = Math.round(result.interest * 100) / 100;
+
+            data.push(roundedBalance);
+            monthlyInterestLog[cat.id].push(roundedInterest);
+            monthlyDepositLog[cat.id].push(Math.round(deposited * 100) / 100);
+        }
+
+        projEndValues[cat.id]    = data[data.length - 1];
+        projTotalDeposit[cat.id] = totalDeposited;
+
+        datasets.push({
+            label: cat.label,
+            data,
+            borderColor: color.line,
+            backgroundColor: color.fill,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 6,
+            borderWidth: 2.5,
+            fill: true,
+        });
+    });
+
+    const fmt2 = v => '₱' + v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    charts[`proj-${year}`] = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: true, labels: { color: 'rgba(240,242,245,0.55)', font: { family: 'Instrument Sans', size: 11 }, boxWidth: 10, padding: 14 } },
+                tooltip: {
+                    ...tooltipStyle(),
+                    callbacks: {
+                        // Title = month label
+                        title: items => `End of ${items[0].label}`,
+                        // Per-goal line: balance + interest earned this month
+                        label: ctx => {
+                            const catId  = goalCats[ctx.datasetIndex]?.id;
+                            const bal    = ctx.parsed.y;
+                            const intAmt = catId ? (monthlyInterestLog[catId]?.[ctx.dataIndex] ?? 0) : 0;
+                            const dep    = catId ? (monthlyDepositLog[catId]?.[ctx.dataIndex]  ?? 0) : 0;
+                            return [
+                                ` ${ctx.dataset.label}`,
+                                `   Balance : ${fmt2(bal)}`,
+                                `   Deposited: ${fmt2(dep)}`,
+                                `   Interest : +${fmt2(intAmt)}`,
+                            ];
+                        },
+                        // Footer = combined total balance
+                        afterBody: items => {
+                            const totalBal = items.reduce((s,i) => s + i.parsed.y, 0);
+                            const totalInt = items.reduce((s,i) => {
+                                const catId = goalCats[i.datasetIndex]?.id;
+                                return s + (catId ? (monthlyInterestLog[catId]?.[i.dataIndex] ?? 0) : 0);
+                            }, 0);
+                            return [
+                                ``,
+                                `  Combined balance : ${fmt2(totalBal)}`,
+                                `  Total interest   : +${fmt2(totalInt)}`,
+                            ];
+                        }
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: 'rgba(240,242,245,0.4)', font: { family: 'IBM Plex Mono', size: 10 }, maxRotation: 45 }
+                },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.06)' },
+                    ticks: { color: 'rgba(240,242,245,0.4)', font: { family: 'IBM Plex Mono', size: 10 }, callback: v => '₱' + v.toLocaleString() },
+                    beginAtZero: true,
+                }
+            }
+        }
+    });
+
+    // --- 4. Summary cards ---
+    if (summaryEl) {
+        const totalProjected = goalCats.reduce((s,c) => s + (projEndValues[c.id]||0), 0);
+        const totalInterest  = goalCats.reduce((s,c) => s + Math.max(0,(projEndValues[c.id]||0) - projTotalDeposit[c.id]), 0);
+
+        const perCatCards = goalCats.slice(0, 3).map((cat, i) => {
+            const color    = goalColors[i % goalColors.length].line;
+            const val      = projEndValues[cat.id] || 0;
+            const interest = Math.max(0, val - projTotalDeposit[cat.id]);
+            const deposited = projTotalDeposit[cat.id] || 0;
+            const targetEl = document.getElementById(`goal_${cat.id}_${year}`);
+            const target   = parseFloat(targetEl?.value) || budgetData.data[year]?.goals?.[cat.id] || 0;
+            const etaText  = target > 0 ? (() => {
+                const ds  = datasets.find(d => d.label === cat.label);
+                if (!ds) return '—';
+                const idx = ds.data.findIndex(v => v >= target);
+                return idx >= 0 ? `~${labels[idx]}` : 'Beyond range';
+            })() : null;
+            return `<div class="proj-stat" style="border-color:${color.replace('1)','0.25)')};">
+                <div class="proj-stat-label" style="color:${color}">${cat.label}</div>
+                <div class="proj-stat-value" style="color:${color}">${fmt2(val)}</div>
+                <div class="proj-stat-sub">deposited ${fmt2(deposited)}</div>
+                <div class="proj-stat-sub">+${fmt2(interest)} interest earned</div>
+                ${etaText ? `<div class="proj-stat-sub" style="margin-top:3px">🎯 ${fmt2(target)} → ${etaText}</div>` : ''}
+            </div>`;
+        }).join('');
+
+        summaryEl.innerHTML = perCatCards + `
+            <div class="proj-combined-bar">
+                <span class="proj-combined-item">Combined <strong>${fmt2(totalProjected)}</strong></span>
+                <span class="proj-combined-sep">·</span>
+                <span class="proj-combined-item">Interest <strong style="color:var(--gold)">+${fmt2(totalInterest)}</strong></span>
+                <span class="proj-combined-sep">·</span>
+                <span class="proj-combined-item" style="color:var(--muted)">Maya 4–8% p.a. tiered · daily accrual</span>
+            </div>`;
+    }
+}
+
+function chartOptions({ title, legend }) {
+    return {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+            legend: { display: !!legend, labels: { color: 'rgba(240,242,245,0.55)', font: { family: 'Instrument Sans', size: 11 }, boxWidth: 10, padding: 14 } },
+            tooltip: { ...tooltipStyle(), callbacks: { label: ctx => ` ₱${(ctx.parsed.y ?? ctx.parsed).toLocaleString()}` } },
+        },
+        scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(240,242,245,0.4)', font: { family: 'IBM Plex Mono', size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'rgba(240,242,245,0.4)', font: { family: 'IBM Plex Mono', size: 10 }, callback: v => '₱' + v.toLocaleString() }, beginAtZero: true },
+        }
+    };
+}
+function tooltipStyle() {
+    return { backgroundColor: '#1a1d24', borderColor: 'rgba(232,184,75,0.25)', borderWidth: 1, titleColor: '#f0f2f5', bodyColor: 'rgba(240,242,245,0.6)', padding: 10, titleFont: { family: 'Instrument Sans' }, bodyFont: { family: 'IBM Plex Mono' } };
+}
+
+// ══════════════════════════════════════════
+// EXPORT / IMPORT / CLEAR
+// ══════════════════════════════════════════
+function exportData() {
+    collectAllData();
+    const blob = new Blob([JSON.stringify(budgetData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `financial-roadmap-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    localStorage.setItem('frm_last_export', new Date().toISOString());
+    updateLastSaved();
+    showToast('✅ Exported!');
+}
+
+function importData(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            budgetData = JSON.parse(ev.target.result);
+            if (!budgetData.categories) budgetData.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+            rebuildAll();
+            showToast('✅ Data imported!');
+        } catch { showToast('❌ Invalid file', true); }
+    };
+    reader.readAsText(file);
+}
+
+function clearAll() {
+    showConfirm({
+        icon: '⚠️',
+        title: 'Clear all data?',
+        message: 'This will permanently wipe all entries for every year. Export a backup first if needed.',
+        okLabel: 'Clear Everything',
+        onOk: () => {
+            budgetData.years.forEach(y => {
+                budgetData.data[y] = { entries: {}, completed: {}, goals: {} };
+            });
+            rebuildAll(true);
+            showToast('All data cleared.');
+        }
+    });
+}
+
+// ══════════════════════════════════════════
+// REBUILD EVERYTHING (after import / cat change)
+// ══════════════════════════════════════════
+function rebuildAll(saveAfter = false) {
+    document.getElementById('yearContainers').innerHTML = '';
+    Object.keys(charts).forEach(k => { try { charts[k].destroy(); } catch{} delete charts[k]; });
+    budgetData.years.forEach(y => {
+        if (!budgetData.data[y]) budgetData.data[y] = { entries: {}, completed: {}, goals: {} };
+        buildYearContainer(y);
+    });
+    renderYearNav();
+    switchYear(currentYear);
+    if (saveAfter) saveToLocalStorage();
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+isLoading = true;
+loadFromLocalStorage();
+const savedYear = parseInt(localStorage.getItem('frm_year'));
+if (savedYear && budgetData.years.includes(savedYear)) currentYear = savedYear;
+rebuildAll(false); // don't save during init — data already loaded from storage
+isLoading = false;
+updateLastSaved();
+</script>
+</body>
+</html>
